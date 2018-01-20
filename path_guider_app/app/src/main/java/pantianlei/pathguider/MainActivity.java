@@ -2,9 +2,8 @@ package pantianlei.pathguider;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.media.AudioFormat;
-import android.media.MediaRecorder;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -14,18 +13,18 @@ import android.widget.ImageButton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-    private final String key = "274f23b628ba487abac7d06c5c3b99c8";
 
     private final static String TAG = "main";
 
@@ -36,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private Client client;
     private String ip;
     private int port;
+    private TextToSpeech tts;
+    final AudioRecorder rec = new AudioRecorder();
+    final SpeechClientREST speechClient = new SpeechClientREST();
+    final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SmartVoiceRecorder/recording.wav";
 
     private boolean isConnected = true;
 
@@ -49,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton button = findViewById(R.id.button);
         final TextView result = findViewById(R.id.connectText);
         result.setTextColor(Color.BLACK);
-        final AudioRecorder rec = new AudioRecorder();
-        final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SmartVoiceRecorder/recording.wav";
+        vocalize("Hello. Welcome to your path guider!");
 
         //Add button event listener
         button.setOnTouchListener(
@@ -70,19 +72,17 @@ public class MainActivity extends AppCompatActivity {
                             v.animate().scaleY(1f).setDuration(500).start();
 
                             rec.stopRecording();
-
-                            final SpeechClientREST client = new SpeechClientREST();
                             try {
                                 final InputStream input = new FileInputStream(filePath);
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         try {
-                                            String jsonString = client.process(input);
+                                            String jsonString = speechClient.process(input);
                                             JSONObject jsonObj = new JSONObject(jsonString);
                                             String resultText = jsonObj.get("DisplayText").toString();
-                                            System.out.println(resultText);
-                                            result.setText(resultText);
+                                            //result.setText(resultText);
+                                            parse(resultText);
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -132,5 +132,87 @@ public class MainActivity extends AppCompatActivity {
                 client.sendFIND(FINDText.getText().toString());
             }
         });
+    }
+
+    private void parse(String textt) {
+        String text = textt.toLowerCase();
+        if (text.contains("define")) {
+            int s = text.indexOf("define") + 7;
+            String obj = text.substring(s).replaceAll("[^a-z]","");
+            vocalize("Do you want to define " + obj + "?");
+            if (!confirm()) {
+                vocalize("Please retry then.");
+            } else {
+                define(obj);
+            }
+        } else if (text.contains("find")) {
+            int s = text.indexOf("find") + 5;
+            String obj = text.substring(s).replaceAll("[^a-z]","");
+            vocalize("Do you want to find " + obj + "?");
+            if (!confirm()) {
+                vocalize("Please retry then.");
+            } else {
+                find(obj);
+            }
+        }
+    }
+
+    private boolean confirm(){
+        final boolean[] bool = {false};
+        rec.startRecording();
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        rec.stopRecording();
+        try {
+            final InputStream input = new FileInputStream(filePath);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String jsonString = speechClient.process(input);
+                        JSONObject jsonObj = new JSONObject(jsonString);
+                        String resultText = jsonObj.get("DisplayText").toString();
+                        if (resultText.toLowerCase().contains("yes")) {
+                            bool[0] = true;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            t.start();
+            t.join();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return bool[0];
+    }
+
+    private void vocalize(String text) {
+        final String textt = text;
+         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.US);
+                    tts.speak(textt, TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+        });
+    }
+
+    //define the object
+    private void define(String obj) {
+        System.out.println("Begin to define " + obj);
+    }
+
+    //find the object
+    private void find(String obj) {
+        System.out.println("Begin to find " + obj);
     }
 }

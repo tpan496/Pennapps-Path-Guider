@@ -50,8 +50,8 @@ public class SpeechClientREST {
   }
 
   private String getResponse(HttpURLConnection connection) throws IOException {
-    System.out.println(connection.getResponseCode());
-    System.out.println(connection.getResponseMessage());
+//    System.out.println(connection.getResponseCode());
+//    System.out.println(connection.getResponseMessage());
     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
       throw new RuntimeException(String.format("Something went wrong, server returned: %d (%s)",
           connection.getResponseCode(), connection.getResponseMessage()));
