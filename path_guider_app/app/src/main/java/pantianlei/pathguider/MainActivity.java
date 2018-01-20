@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         return bool[0];
     }
 
-    private void vocalize(String text) {
+    public void vocalize(String text) {
         final String textt = text;
          tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override

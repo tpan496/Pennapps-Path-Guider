@@ -56,7 +56,7 @@
         <EditText
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="3000"
+            android:text="6666"
             android:id="@+id/PortText"/>
     </LinearLayout>
 
