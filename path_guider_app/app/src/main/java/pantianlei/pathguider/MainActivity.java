@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.Time;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SmartVoiceRecorder/recording.wav";
 
     private boolean isConnected = true;
+    private boolean confirming = false;
+    private String objToBeConfirmed = "";
+    private boolean defining = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @SuppressWarnings("")
@@ -136,62 +138,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void parse(String textt) {
         String text = textt.toLowerCase();
-        if (text.contains("define")) {
-            int s = text.indexOf("define") + 7;
-            String obj = text.substring(s).replaceAll("[^a-z]","");
-            vocalize("Do you want to define " + obj + "?");
-            if (!confirm()) {
-                vocalize("Please retry then.");
+        if (confirming) {
+            System.out.println(text);
+            if (text.contains("yes") || text.contains("yeah") || text.contains("yep") || text.contains("yup")) {
+                if (defining) {
+                    define(objToBeConfirmed);
+                } else {
+                    vocalize("Detecting " + objToBeConfirmed);
+                    find(objToBeConfirmed);
+                }
             } else {
-                define(obj);
+                vocalize("Please retry then.");
             }
-        } else if (text.contains("find")) {
-            int s = text.indexOf("find") + 5;
-            String obj = text.substring(s).replaceAll("[^a-z]","");
-            vocalize("Do you want to find " + obj + "?");
-            if (!confirm()) {
-                vocalize("Please retry then.");
-            } else {
-                find(obj);
+            confirming = false;
+        } else {
+            if (text.contains("define")) {
+                defining = true;
+                int s = text.indexOf("define") + 7;
+                String obj = text.substring(s).replaceAll("[^a-z]","");
+                confirming = true;
+                objToBeConfirmed = obj;
+                vocalize("Do you want to define " + obj + "?");
+            } else if (text.contains("find")) {
+                defining = false;
+                int s = text.indexOf("find") + 5;
+                String obj = text.substring(s).replaceAll("[^a-z]","");
+                confirming = true;
+                objToBeConfirmed = obj;
+                vocalize("Do you want to find " + obj + "?");
             }
         }
     }
 
-    private boolean confirm(){
-        final boolean[] bool = {false};
-        rec.startRecording();
-        try {
-            TimeUnit.SECONDS.sleep(4);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        rec.stopRecording();
-        try {
-            final InputStream input = new FileInputStream(filePath);
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String jsonString = speechClient.process(input);
-                        JSONObject jsonObj = new JSONObject(jsonString);
-                        String resultText = jsonObj.get("DisplayText").toString();
-                        if (resultText.toLowerCase().contains("yes")) {
-                            bool[0] = true;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.start();
-            t.join();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return bool[0];
-    }
 
     public void vocalize(String text) {
         final String textt = text;
