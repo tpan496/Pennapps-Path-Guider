@@ -29,7 +29,7 @@ def find(sock, name):
 
 
 
-HOST = '192.168.50.45'
+HOST = '192.168.50.255'
 PORT = 6666
 #setup sockets
 serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
