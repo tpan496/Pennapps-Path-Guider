@@ -3,8 +3,11 @@ from time import sleep
 
 camera = PiCamera()
 
-camera.start_preview()
-sleep(10)
-camera.stop_preview()
+datapath = '/home/pi/Desktop/'
+i = 0
+while true:
+    camera.capture(datapath + 'image'+i+'.jpg')
+    sleep(1000)
+
 
 
