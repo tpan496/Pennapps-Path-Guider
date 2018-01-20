@@ -5,7 +5,7 @@ camera = PiCamera()
 
 datapath = '/home/pi/Desktop/'
 i = 0
-while true:
+while True:
     camera.capture(datapath + 'image'+i+'.jpg')
     sleep(1000)
 
