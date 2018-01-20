@@ -58,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            v.animate().scaleXBy(2f).setDuration(500).start();
+                            v.animate().scaleYBy(2f).setDuration(500).start();
+
                             final File audioFile = new File(filePath);
                             mediaRecorder.setAudioSamplingRate(16000);
                             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -72,8 +74,12 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             mediaRecorder.start();
-
+                            return true;
                         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                            v.animate().cancel();
+                            v.animate().scaleX(1f).setDuration(500).start();
+                            v.animate().scaleY(1f).setDuration(500).start();
+
                             mediaRecorder.stop();
                             mediaRecorder.reset();
                             mediaRecorder.release();
@@ -94,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
-
-                            //new File(filePath).delete();
+                            return true;
                         }
                         return true;
                     }
