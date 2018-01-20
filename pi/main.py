@@ -23,7 +23,7 @@ def find(sock, name):
         if (time % reportInterval == 0):
             sock.sendall("instr hahahahahaha" + "\n")
 
-HOST = '192.168.50.45'
+HOST = '192.168.50.64'
 PORT = 6666
 #setup sockets
 serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
