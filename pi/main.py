@@ -1,71 +1,72 @@
+import random
 import socket, select
-from picamera import PiCamera
-
+from time import gmtime, strftime
+from random import randint
+from recgnition import *
+#from picamera import PiCamera
 from time import sleep
-camera = PiCamera()
-datapath = '/home/pi/Desktop/'
 
-serversocket = socket.socket(
-    socket.AF_INET, socket.SOCK_STREAM)
-serversocket.bind((socket.gethostname(), 80))
-serversocket.listen(5)
+#camera = PiCamera()
+imgPrefix = "/home/pi/Desktop/images/image_"
+curImageLoc = '/home/pi/Desktop/image.jpg'
+
+#Find the specified object on camera, and give visual feedback
+def find(sock, name):
+    time = 0
+    interval = 0.1
+    reportInterval = 10
+    while True:
+        #camera.capture(curImageLoc)
+        (x,y,w,h) = recgnition(imgPrefix+name,curImageLoc)
+        sleep(interval)
+        time += 1
+        if (time % reportInterval == 0):
+            sock.sendall("instr hahahahahaha")
 
 
-#!/usr/bin/env python
 
 
-imgcounter = 1
-basename = "image%s.png"
 
-HOST = '127.0.0.1'
+
+
+HOST = '192.168.50.45'
 PORT = 6666
-
-connected_clients_sockets = []
-
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.bind((HOST, PORT))
-server_socket.listen(10)
-
-connected_clients_sockets.append(server_socket)
+#setup sockets
+serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+serversock.bind((HOST, PORT))
+serversock.listen(10)
 
 while True:
-    read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-    for sock in read_sockets:
-        if sock == server_socket:
-            sockfd, client_address = server_socket.accept()
-            connected_clients_sockets.append(sockfd)
+    sock, client_address = serversock.accept()
+    data = sock.recv(4096).decode('UTF-8')
+    txt = str(data)
 
-        else:
-            try:
-                data = sock.recv(4096)
-                txt = str(data)
-                if data:
-                    if data.startswith('DEF'):
-                        tmp = txt.split()
-                        name = tmp[1]
-                        size = int(tmp[2])
+    name = ""
+    size = 0
+    if data:
+        if data.startswith("DEF"):
+            tmp = txt.split()
+            name = tmp[1]
+            size = int(tmp[2])
+            print 'got size'
+            sock.sendall("GOTDEF")
+        elif data.startswith("FIND"):
+            tmp = txt.split()
+            name = tmp[1]
+            sock.sendall("GOTFIND")
+            find(sock,name)
+        else :
+            myfile = open(imgPrefix+name, 'wb')
+            myfile.write(data)
+            data = sock.recv(40960000)
+            if not data:
+                myfile.close()
+            else:
+                myfile.write(data)
+                myfile.close()
+            sock.sendall("GOTIMAGE")
 
-                    elif data.startswith('FIND'):
-                        sock.shutdown()
+sock.close()
 
-                    else:
-                        myfile = open("images/"+name, 'wb')
-                        myfile.write(data)
 
-                        data = sock.recv(40960000)
-                        if not data:
-                            myfile.close()
-                            break
-                        myfile.write(data)
-                        myfile.close()
-
-                        sock.sendall("GOT IMAGE")
-                        sock.shutdown()
-            except:
-                sock.close()
-                connected_clients_sockets.remove(sock)
-                continue
-        imgcounter += 1
-server_socket.close()
