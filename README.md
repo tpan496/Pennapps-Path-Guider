@@ -9,6 +9,6 @@ Open with Android Studio 3.0.1.
  * Android sends to Pi:
  	* DEF [Name] [Size]
  	* FIND [Name]
-  * READY
+  * READY
  * Pi sends to Android:
  	* INSTR [sentence]
