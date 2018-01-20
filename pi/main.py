@@ -14,7 +14,7 @@ curImageLoc = '/home/pi/Desktop/image.jpg'
 def find(sock, name):
     time = 0
     interval = 0.1
-    reportInterval = 10
+    reportInterval = 5
     while True:
         camera.capture(curImageLoc)
         (x,y,w,h) = recgnition(imgPrefix+name,curImageLoc)
@@ -41,25 +41,15 @@ while True:
         if data.startswith("DEF"):
             tmp = txt.split()
             name = tmp[1]
-            size = int(tmp[2])
-            print 'got size'
-            sock.sendall("GOTDEF\n")
+            sock.sendall("INSTR Hold your camera towards the item, and say ready when ready.\n")
         elif data.startswith("FIND"):
             tmp = txt.split()
             name = tmp[1]
-            sock.sendall("GOTFIND\n")
+            sock.sendall("INSTR Start rotating.\n")
             find(sock,name)
-        else :
-            myfile = open(imgPrefix+name, 'wb+')
-            myfile.write(data)
-            data = sock.recv(40960000)
-            if not data:
-                myfile.close()
-            else:
-                myfile.write(data)
-                myfile.close()
-            print data
-            sock.sendall("GOTIMAGE\n")
+        elif data.startswith("READY") :
+            camera.capture(imgPrefix+name)
+            sock.sendall("INSTR Your image is defined.\n")
 
 sock.close()
 
