@@ -8,6 +8,7 @@ i = 0
 while True:
     camera.capture(datapath + 'image'+str(i)+'.jpg')
     sleep(1)
+    i += 1
 
 
 
