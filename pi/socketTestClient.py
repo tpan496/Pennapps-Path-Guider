@@ -5,7 +5,7 @@ from random import randint
 
 image = "tux.png"
 
-HOST = '192.168.50.64/24'
+HOST = '192.168.50.64'
 PORT = 6666
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
