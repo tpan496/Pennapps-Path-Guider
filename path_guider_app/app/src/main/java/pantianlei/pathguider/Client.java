@@ -1,6 +1,12 @@
 package pantianlei.pathguider;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,70 +24,93 @@ public class Client {
 
     private final static String TAG = "client";
     private ExecutorService executorService = Executors.newFixedThreadPool(4);
+    private Activity activity;
 
     String ip;
     int port;
     private static Socket socket;
     PrintWriter pw;
 
-    Client(String ip, int port) {
+    Client(String ip, int port, MainActivity activity) {
         this.ip = ip;
         this.port = port;
+        this.activity = activity;
+        notifyToast("Client initialized");
     }
 
-    public void connect(){
+    public void sendFIND(final String msg) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Log.e(TAG,"attempt socket connection to "+ip+":"+port);
-                    socket = new Socket(ip, port);
-                    Log.e(TAG, "socket started");
-                    OutputStream dout= socket.getOutputStream();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    for (String inputLine; (inputLine = in.readLine()) != null;) {
-                        Log.e(TAG, "received"+inputLine);
-                    }
-                    Log.e(TAG,"connection end");
-
-                }catch (Exception e){
-                    Log.e(TAG, e.toString());
-                }finally {
-                    //Closing the socket
-                    try {
+                    if (socket != null) {
                         socket.close();
-                    } catch(Exception e) {
-                        e.printStackTrace();
                     }
+                    notifyToast("attempt socket connection to " + ip + ":" + port);
+                    socket = new Socket(ip, port);
+                    notifyToast("socket started");
+                    OutputStream dout = socket.getOutputStream();
+                    pw = new PrintWriter(dout);
+                    pw.print("FIND " + msg);
+                    pw.flush();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    for (String inputLine; (inputLine = in.readLine()) != null; ) {
+                        notifyToast("received" + inputLine);
+                    }
+                    notifyToast("connection end");
+
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
                 }
             }
         });
     }
 
-    public void sendDEF(final String msg){
+    public void sendDEF(final String msg) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if(socket != null) {
+                    if (socket != null) {
                         socket.close();
                     }
-                    Log.e(TAG,"attempt socket connection to "+ip+":"+port);
+                    notifyToast("attempt socket connection to " + ip + ":" + port);
                     socket = new Socket(ip, port);
-                    Log.e(TAG, "socket started");
-                    OutputStream dout= socket.getOutputStream();
+                    notifyToast("socket started");
+                    OutputStream dout = socket.getOutputStream();
                     pw = new PrintWriter(dout);
                     pw.print("DEF " + msg);
                     pw.flush();
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    for (String inputLine; (inputLine = in.readLine()) != null;) {
-                        Log.e(TAG, "received"+inputLine);
+                    for (String inputLine; (inputLine = in.readLine()) != null; ) {
+                        notifyToast("received" + inputLine);
                     }
-                    Log.e(TAG,"connection end");
 
-                }catch (Exception e){
+                    notifyToast("connection end");
+
+                } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
+            }
+        });
+    }
+
+    public void disconnect() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    private void notifyToast(final String msg){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, msg);
             }
         });
     }
