@@ -6,5 +6,5 @@ package pantianlei.pathguider;
 
 public class Constants {
 
-    public final static String CHAT_SERVER_URL = "http://192.168.50.205:3000";
+    public final static String CHAT_SERVER_URL = "http://192.168.50.45:6666";
 }

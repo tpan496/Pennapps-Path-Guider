@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private final String key = "274f23b628ba487abac7d06c5c3b99c8";
@@ -23,10 +24,11 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = "main";
 
     private Button connectButton;
-    private String addr;
-    private int port;
+    private Button sendButton;
     private TextView response;
-    private Socket mSocket;
+    private Client client;
+    private String ip;
+    private int port;
 
     private boolean isConnected = true;
 
@@ -89,6 +91,30 @@ public class MainActivity extends AppCompatActivity {
                     //new File(filePath).delete();
                 }
                 return true;
+
+        connectButton = (Button) findViewById(R.id.connectButton);
+        sendButton = (Button) findViewById(R.id.sendButton);
+        response = (TextView) findViewById(R.id.connectText);
+
+        final PathGuiderApplication app = (PathGuiderApplication) getApplication();
+        ip = "192.168.50.64";
+        port = 6666;
+
+        client = new Client(ip, port);
+
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                client = new Client(ip, port);
+                client.connect();
+            }
+        });
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                client.sendDEF("wtf gg smida");
+
             }
         });
     }
