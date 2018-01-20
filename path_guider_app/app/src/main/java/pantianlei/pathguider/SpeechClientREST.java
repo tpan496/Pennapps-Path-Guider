@@ -35,13 +35,6 @@ public class SpeechClientREST {
   private static final String URL = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1?language=en-US&format=simple";
 
 
-  private final Authentication auth;
-
-  public SpeechClientREST(Authentication auth){
-    this.auth = auth;
-  }
-
-
   private HttpURLConnection connect() throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
     connection.setDoInput(true);
@@ -50,7 +43,6 @@ public class SpeechClientREST {
     connection.setRequestProperty("Content-type", "audio/wav; codec=\"audio/pcm\"; samplerate=16000");
     connection.setRequestProperty("Accept", "application/json;text/xml");
     connection.setRequestProperty("Ocp-Apim-Subscription-Key", "274f23b628ba487abac7d06c5c3b99c8");
-    //connection.setRequestProperty("Authorization", "Bearer " + auth.getToken());
     connection.setChunkedStreamingMode(0); // 0 == default chunk size
     connection.connect();
 
@@ -60,10 +52,10 @@ public class SpeechClientREST {
   private String getResponse(HttpURLConnection connection) throws IOException {
     System.out.println(connection.getResponseCode());
     System.out.println(connection.getResponseMessage());
-//    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//      throw new RuntimeException(String.format("Something went wrong, server returned: %d (%s)",
-//          connection.getResponseCode(), connection.getResponseMessage()));
-//    }
+    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+      throw new RuntimeException(String.format("Something went wrong, server returned: %d (%s)",
+          connection.getResponseCode(), connection.getResponseMessage()));
+    }
 
     try (BufferedReader reader =
         new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
@@ -83,12 +75,12 @@ public class SpeechClientREST {
     return connection;
   }
 
-//  private HttpURLConnection upload(Path filepath, HttpURLConnection connection) throws IOException {
-//    try (OutputStream output = connection.getOutputStream()) {
-//      Files.copy(filepath, output);
-//    }
-//    return connection;
-//  }
+  private HttpURLConnection upload(Path filepath, HttpURLConnection connection) throws IOException {
+    try (OutputStream output = connection.getOutputStream()) {
+      Files.copy(filepath, output);
+    }
+    return connection;
+  }
 
   public String process(InputStream is) throws IOException {
     return getResponse(upload(is, connect()));

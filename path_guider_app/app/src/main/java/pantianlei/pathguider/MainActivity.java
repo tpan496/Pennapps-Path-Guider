@@ -1,6 +1,7 @@
 package pantianlei.pathguider;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -16,10 +17,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private final String key = "274f23b628ba487abac7d06c5c3b99c8";
@@ -44,14 +47,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final ImageButton button = findViewById(R.id.button);
-        final MediaRecorder mediaRecorder = new MediaRecorder();
-        final File dirPath = new File(Environment.getExternalStorageDirectory(), "SmartVoiceRecorder");
-        if (!dirPath.exists()) {
-            dirPath.mkdirs();
-        }
-//        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pennapps";
-        final File audioFile = new File(dirPath, "recording.wav");
-        final String filePath = audioFile.getAbsolutePath();
+        final TextView result = findViewById(R.id.connectText);
+        result.setTextColor(Color.BLACK);
+        final AudioRecorder rec = new AudioRecorder();
+        final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SmartVoiceRecorder/recording.wav";
 
         //Add button event listener
         button.setOnTouchListener(
@@ -59,40 +58,32 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                            v.animate().scaleXBy(2f).setDuration(500).start();
-                            v.animate().scaleYBy(2f).setDuration(500).start();
+                            v.animate().scaleXBy(1.5f).setDuration(500).start();
+                            v.animate().scaleYBy(1.5f).setDuration(500).start();
 
                             final File audioFile = new File(filePath);
-                            mediaRecorder.setAudioSamplingRate(16000);
-                            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                            mediaRecorder.setOutputFormat(AudioFormat.CHANNEL_OUT_MONO);
-                            mediaRecorder.setAudioEncoder(AudioFormat.ENCODING_PCM_16BIT);
-                            mediaRecorder.setOutputFile(audioFile);
-                            try {
-                                mediaRecorder.prepare();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            mediaRecorder.start();
+                            rec.startRecording();
                             return true;
                         } else if (event.getAction() == MotionEvent.ACTION_UP) {
                             v.animate().cancel();
                             v.animate().scaleX(1f).setDuration(500).start();
                             v.animate().scaleY(1f).setDuration(500).start();
 
-                            mediaRecorder.stop();
-                            mediaRecorder.reset();
-                            mediaRecorder.release();
+                            rec.stopRecording();
 
-                            final SpeechClientREST client = new SpeechClientREST(new Authentication(key));
+                            final SpeechClientREST client = new SpeechClientREST();
                             try {
                                 final InputStream input = new FileInputStream(filePath);
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         try {
-                                            System.out.println(client.process(input));
-                                        } catch (IOException e) {
+                                            String jsonString = client.process(input);
+                                            JSONObject jsonObj = new JSONObject(jsonString);
+                                            String resultText = jsonObj.get("DisplayText").toString();
+                                            System.out.println(resultText);
+                                            result.setText(resultText);
+                                        } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     }
