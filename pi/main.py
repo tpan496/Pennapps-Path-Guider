@@ -18,7 +18,6 @@ def find(sock, name):
     while True:
         camera.capture(curImageLoc)
         (x,y,w,h) = recgnition(imgPrefix+name,curImageLoc)
-        sleep(interval)
         time += 1
         if (time % reportInterval == 0):
             sock.sendall("instr hahahahahaha" + "\n")
