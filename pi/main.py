@@ -57,14 +57,15 @@ while True:
             sock.sendall("GOTFIND\n")
             find(sock,name)
         else :
-            myfile = open(imgPrefix+name, 'wb')
-            myfile.write(data)
+            #myfile = open(imgPrefix+name, 'wb')
+            #myfile.write(data)
             data = sock.recv(40960000)
-            if not data:
-                myfile.close()
-            else:
-                myfile.write(data)
-                myfile.close()
+            #if not data:
+            #    myfile.close()
+            #else:
+            #    myfile.write(data)
+            #    myfile.close()
+            print data
             sock.sendall("GOTIMAGE\n")
 
 sock.close()
