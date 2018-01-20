@@ -38,6 +38,7 @@ while True:
     name = ""
     size = 0
     if data:
+        print data
         if data.startswith("DEF"):
             tmp = txt.split()
             name = tmp[1]
