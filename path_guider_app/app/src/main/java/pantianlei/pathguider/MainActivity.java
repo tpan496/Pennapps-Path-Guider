@@ -187,11 +187,13 @@ public class MainActivity extends AppCompatActivity {
     //define the object
     private void define(String obj) {
         System.out.println("Begin to define " + obj);
+        client.sendDEF(obj);
     }
 
     //find the object
     private void find(String obj) {
         vocalize("Detecting " + obj);
         System.out.println("Begin to find " + obj);
+        client.sendFIND(obj);
     }
 }

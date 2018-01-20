@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,6 +27,7 @@ public class Client {
     private final static String TAG = "client";
     private ExecutorService executorService = Executors.newFixedThreadPool(4);
     private Activity activity;
+    private TextToSpeech tts;
 
     String ip;
     int port;
@@ -56,6 +59,7 @@ public class Client {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     for (String inputLine; (inputLine = in.readLine()) != null; ) {
                         notifyToast("received" + inputLine);
+                        vocalize(inputLine);
                     }
                     notifyToast("connection end");
 
@@ -84,6 +88,7 @@ public class Client {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     for (String inputLine; (inputLine = in.readLine()) != null; ) {
                         notifyToast("received" + inputLine);
+                        vocalize(inputLine);
                     }
 
                     notifyToast("connection end");
@@ -111,6 +116,20 @@ public class Client {
             public void run() {
                 Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
                 Log.e(TAG, msg);
+            }
+        });
+    }
+
+    public void vocalize(String text) {
+        //text = text.substring(6, text.length());
+        final String textt = text ;
+        tts = new TextToSpeech(activity.getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.US);
+                    tts.speak(textt, TextToSpeech.QUEUE_FLUSH, null);
+                }
             }
         });
     }
