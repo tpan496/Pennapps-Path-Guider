@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean[] bool = {false};
         rec.startRecording();
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(4);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -213,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
     //find the object
     private void find(String obj) {
+        vocalize("Detecting " + obj);
         System.out.println("Begin to find " + obj);
     }
 }
