@@ -21,7 +21,7 @@ def find(sock, name):
         sleep(interval)
         time += 1
         if (time % reportInterval == 0):
-            sock.sendall("instr hahahahahaha")
+            sock.sendall("instr hahahahahaha" + "\n")
 
 
 
@@ -45,16 +45,16 @@ while True:
     name = ""
     size = 0
     if data:
-        if data.startswith("DEF"):
+        if data.startswith("DEF\n"):
             tmp = txt.split()
             name = tmp[1]
             size = int(tmp[2])
             print 'got size'
-            sock.sendall("GOTDEF")
-        elif data.startswith("FIND"):
+            sock.sendall("GOTDEF\n")
+        elif data.startswith("FIND\n"):
             tmp = txt.split()
             name = tmp[1]
-            sock.sendall("GOTFIND")
+            sock.sendall("GOTFIND\n")
             find(sock,name)
         else :
             myfile = open(imgPrefix+name, 'wb')
@@ -65,7 +65,7 @@ while True:
             else:
                 myfile.write(data)
                 myfile.close()
-            sock.sendall("GOTIMAGE")
+            sock.sendall("GOTIMAGE\n")
 
 sock.close()
 
