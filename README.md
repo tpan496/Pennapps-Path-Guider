@@ -10,5 +10,6 @@ Open with Android Studio 3.0.1.
  	* DEF [Name] [Size]
  	* FIND [Name]
   * [Image]
+  * READY
  * Pi sends to Android:
  	* INSTR [sentence]
