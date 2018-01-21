@@ -6,7 +6,9 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
-curImageLoc = '/home/pi/Desktop/image.png'
+curImageLoc = '/home/pi/Desktop/image.png' \
+              '' \
+              ''
 
 #Find the specified object on camera, and give visual feedback
 
@@ -19,7 +21,6 @@ def get_rec_from_mac(theName,image):
     sock.connect(server_address)
     # open image
     myfile = open(image, 'rb')
-
     bytes = myfile.read()
 
     # send image name to server
@@ -27,10 +28,12 @@ def get_rec_from_mac(theName,image):
     answer = sock.recv(4096)
 
     print 'answer = %s' % answer
+
     # send image to server
     sock.sendall(bytes)
     # check what server send
     answer = sock.recv(4096)
+    print 'answer = %s' % answer
     words = answer.split()
     x0 = int(words[0])
     y0 = int(words[1])
@@ -86,8 +89,5 @@ while True:
             name = tmp[1]
             sock.sendall("Start rotating.\n")
             find(sock,name)
-
-
-sock.close()
 
 
