@@ -8,7 +8,7 @@ from time import sleep
 camera = PiCamera()
 curImageLoc = '/home/pi/Desktop/image.png'
 #Find the specified object on camera, and give visual feedback
-'''
+
 HOST2 = '192.168.50.45'
 PORT2 = 6666
 sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -87,32 +87,4 @@ while True:
             sock.sendall("Start rotating.\n")
             find(sock,name)
 
-'''
-image = curImageLoc
 
-HOST = '192.168.50.45'
-PORT = 6666
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = (HOST, PORT)
-sock.connect(server_address)
-while True:
-
-    # open image
-    myfile = open(image, 'rb')
-    bytes = "huhuuhu"
-    name = "aa"
-
-    # send image name to server
-    sock.sendall("NAME %s" % name)
-    answer = sock.recv(4096)
-
-    print 'answer = %s' % answer
-
-    # send image to server
-    sock.sendall(bytes)
-    # check what server send
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    #myfile.close()

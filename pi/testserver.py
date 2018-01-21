@@ -45,11 +45,12 @@ while True:
                 else :
                     print "case 2"
                     myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
-                    myfile.write(data)
-                    data = sock.recv(40960000)
-                    if not data:
-                        myfile.close()
-                        break
+                    while true:
+                        data = sock.recv(40960000)
+                        if not data:
+                            myfile.close()
+                            break;
+                        myfile.write(data)
                     myfile.write(data)
                     myfile.close()
 
