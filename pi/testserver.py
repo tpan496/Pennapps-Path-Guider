@@ -4,6 +4,9 @@ import random
 import socket, select
 from time import gmtime, strftime
 from random import randint
+
+import os
+
 from recognition import *
 
 imgcounter = 1
@@ -47,10 +50,13 @@ while True:
                     myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
                     while True:
                         data = sock.recv(40960000)
+                        myfile.write(data)
                         if not data:
                             myfile.close()
                             break;
-                        myfile.write(data)
+                    print "hoho"
+                    b = os.path.getsize("/Users/liukaige/Desktop/img.png")
+                    print "size:" + str(b)
                     myfile.write(data)
                     myfile.close()
 

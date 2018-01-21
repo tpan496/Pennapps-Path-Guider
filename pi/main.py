@@ -39,6 +39,8 @@ def get_rec_from_mac(theName,image):
     w = int(words[4])
     h = int(words[5])
     myfile.close()
+    b = os.path.getsize(theName)
+    print "size:" + str(b)
     return (x0,y0,x1,y1,w,h)
 
 def find(sock, name):
