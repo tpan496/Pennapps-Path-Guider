@@ -11,11 +11,11 @@ curImageLoc = '/home/pi/Desktop/image.jpg'
 #Find the specified object on camera, and give visual feedback
 
 def get_rec_from_mac(name,image):
-    HOST = '192.168.50.45'
-    PORT = 6666
+    HOST2 = '192.168.50.45'
+    PORT2 = 6666
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = (HOST, PORT)
+    server_address = (HOST2, PORT2)
     sock.connect(server_address)
 
     try:

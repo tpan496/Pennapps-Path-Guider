@@ -8,7 +8,7 @@ from random import randint
 imgcounter = 1
 basename = "image%s.png"
 
-HOST = '127.0.0.1'
+HOST = '192.168.50.45'
 PORT = 6666
 
 connected_clients_sockets = []
