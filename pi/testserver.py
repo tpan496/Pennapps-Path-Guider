@@ -29,39 +29,31 @@ while True:
     for sock in read_sockets:
 
         if sock == server_socket:
-
+            print "lolo"
             sockfd, client_address = server_socket.accept()
             connected_clients_sockets.append(sockfd)
 
         else:
-            try:
-
-                data = sock.recv(4096)
-                txt = str(data)
-
-                if data:
-
-                    if data.startswith('NAME'):
-                        tmp = txt.split()
-                        name = tmp[1]
-                        print 'got name'
-                        sock.sendall("GOT NAME")
-                    else :
-
-                        myfile = open("/Users/liukaige/Desktop/img.png", 'wb')
-                        myfile.write(data)
-
-                        data = sock.recv(40960000)
-                        if not data:
-                            myfile.close()
-                            break
-                        myfile.write(data)
+            data = sock.recv(4096)
+            txt = str(data)
+            if data:
+                print data
+                if data.startswith('NAME'):
+                    tmp = txt.split()
+                    name = tmp[1]
+                    sock.sendall("GOT NAME")
+                else :
+                    myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
+                    myfile.write(data)
+                    data = sock.recv(40960000)
+                    if not data:
                         myfile.close()
-                        (x0,y0,x1,y1,w,h) = recognition("/Users/liukaige/Desktop/img.png",name)
-                        sock.sendall("100 100 100 100 100 100")
-            except:
-                sock.close()
-                connected_clients_sockets.remove(sock)
-                continue
+                        break
+                    myfile.write(data)
+                    myfile.close()
+
+                    #(x0,y0,x1,y1,w,h) = recognition("/Users/liukaige/Desktop/img.png",name)
+                    sock.sendall("100 100 100 100 100 100")
+
         imgcounter += 1
-server_socket.close()
+#server_socket.close()

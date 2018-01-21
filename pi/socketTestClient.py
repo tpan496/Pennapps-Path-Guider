@@ -7,7 +7,7 @@ from random import randint
 
 image = "/Users/liukaige/Desktop/test.png"
 
-HOST = '127.0.0.1'
+HOST = '192.168.50.45'
 PORT = 6666
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,18 +28,12 @@ try:
     print 'answer = %s' % answer
 
     # send image to server
-    if answer == 'GOT NAME':
-        sock.sendall(bytes)
+    sock.sendall(bytes)
+    # check what server send
+    answer = sock.recv(4096)
+    print 'answer = %s' % answer
 
-        # check what server send
-        answer = sock.recv(4096)
-        print 'answer = %s' % answer
-
-        if answer == 'GOT IMAGE' :
-            sock.sendall("BYE BYE ")
-            print 'Image successfully send to server'
-
-    myfile.close()
+    #myfile.close()
 
 finally:
     sock.close()

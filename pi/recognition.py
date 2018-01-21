@@ -25,7 +25,7 @@ def recog(image, defstring):
     print("[INFO] loading model...")
     net = cv2.dnn.readNetFromCaffe("MobileNetSSD_deploy.prototxt.txt",
                                    "MobileNetSSD_deploy.caffemodel")
-
+    print "hohoheheh"
     # load the input image and construct an input blob for the image
     # by resizing to a fixed 300x300 pixels and then normalizing it
     # (note: normalization is done via the authors of the MobileNet SSD
