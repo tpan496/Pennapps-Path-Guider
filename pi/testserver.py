@@ -38,7 +38,16 @@ while True:
             connected_clients_sockets.append(sockfd)
 
         else:
-            data = sock.recv(4096)
+            def read_line(s):
+                ret = ''
+                while True:
+                    c = s.recv(1)
+                    if c == '\n' or c == '':
+                        break
+                    else:
+                        ret += c
+                return ret
+            data = read_line(sock)
             txt = str(data)
             if data:
                 if data.startswith('NAME'):
@@ -50,7 +59,9 @@ while True:
                 else :
                     print "case 2"
                     myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
-                    data = sock.recv(size)
+                    myfile.write(data)
+                    presize = len(data)
+                    data = sock.recv(size - data)
                     myfile.write(data)
                     myfile.close()
 
