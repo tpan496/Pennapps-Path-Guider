@@ -5,7 +5,7 @@ import socket, select
 from time import gmtime, strftime
 from random import randint
 
-image = "/Users/liukaige/Desktop/test.png"
+image = '/home/pi/Desktop/image.png'
 
 HOST = '192.168.50.45'
 PORT = 6666
