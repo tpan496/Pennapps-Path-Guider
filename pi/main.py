@@ -14,7 +14,7 @@ curImageLoc = '/home/pi/Desktop/image.png'
 
 def get_rec_from_mac(theName):
     client_socket = socket.socket()
-    client_socket.connect(('192.168.50.45', 6666))
+    client_socket.connect(('192.168.50.45', 3333))
 
     # Make a file-like object out of the connection
     connection = client_socket.makefile('wb')

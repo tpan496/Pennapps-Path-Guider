@@ -6,7 +6,7 @@ from PIL import Image
 # Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
 # all interfaces)
 server_socket = socket.socket()
-server_socket.bind(('192.168.50.45', 6666))
+server_socket.bind(('192.168.50.45', 3333))
 server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it
@@ -28,7 +28,7 @@ try:
         image = Image.open(image_stream)
         print('Image is %dx%d' % image.size)
         image.save('/Users/liukaige/Desktop/img.png')
-        socket.sendall("10 10 10 10 10 10")
+        connection.sendall("10 10 10 10 10 10")
 
 finally:
     connection.close()
