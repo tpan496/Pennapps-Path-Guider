@@ -5,7 +5,7 @@ from PIL import Image
 from recognition import *
 # all interfaces)
 server_socket = socket.socket()
-server_socket.bind(('192.168.50.45', 6666))
+server_socket.bind(('192.168.50.45', 3333))
 server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it
@@ -33,7 +33,10 @@ while True:
             image.save('/Users/liukaige/Desktop/img.png')
             print "3"
             name = str(conn.recv(4096))
-            (a,b,c,d,e,f) = recognition('/Users/liukaige/Desktop/img.png',name)
+            try:
+                (a,b,c,d,e,f) = recognition('/Users/liukaige/Desktop/img.png',name)
+            except:
+                (a,b,c,d,e,f) = (0,0,0,0,0,0)
             print "4"
             conn.sendall(str(a) + " " + str(b) + " " + str(c) + " " + str(d) + " " + str(e) + " " + str(f))
     finally:

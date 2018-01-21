@@ -14,7 +14,7 @@ curImageLoc = '/home/pi/Desktop/image.png'
 
 def get_rec_from_mac(theName):
     client_socket = socket.socket()
-    client_socket.connect(('192.168.50.45', 6666))
+    client_socket.connect(('192.168.50.45', 3333))
 
     # Make a file-like object out of the connection
     connection = client_socket.makefile('wb')
@@ -51,6 +51,10 @@ def find(sock, name):
             (x0, y0, x1, y1, w, h) = get_rec_from_mac(name)
             sleep(0.1)
             if x0 != 0 or y0 != 0 or w != 0 or h != 0:
+                print x0
+                print y0
+                print x1
+                print y1
                 sock.sendall("Found" + "\n")
                 sleep(1)
                 hoCenter = (x0+x1)/2
