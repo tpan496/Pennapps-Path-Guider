@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         final EditText portText = (EditText) findViewById(R.id.PortText);
 
         final MainActivity activity = this;
+
+        /*
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,13 +120,11 @@ public class MainActivity extends AppCompatActivity {
                 int port = Integer.parseInt(portText.getText().toString());
                 client = new Client(ip, port, activity);
             }
-        });
+        });*/
 
-        /*
         String ip = IPText.getText().toString();
         int port = Integer.parseInt(portText.getText().toString());
         client = new Client(ip, port, activity);
-        */
 
         sendDEFButton.setOnClickListener(new View.OnClickListener() {
             @Override
