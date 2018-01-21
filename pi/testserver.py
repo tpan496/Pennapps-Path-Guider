@@ -61,7 +61,7 @@ while True:
                     myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
                     myfile.write(data)
                     presize = len(data)
-                    data = sock.recv(size - data)
+                    data = sock.recv(size - len(data))
                     myfile.write(data)
                     myfile.close()
 
