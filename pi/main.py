@@ -8,14 +8,9 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
+camera.resolution = (640, 480)
 curImageLoc = '/home/pi/Desktop/image.png'
 #Find the specified object on camera, and give visual feedback
-
-HOST2 = '192.168.50.45'
-PORT2 = 6666
-sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = (HOST2, PORT2)
-sock2.connect(server_address)
 
 def get_rec_from_mac(theName):
     client_socket = socket.socket()
@@ -24,21 +19,15 @@ def get_rec_from_mac(theName):
     # Make a file-like object out of the connection
     connection = client_socket.makefile('wb')
     try:
-        with picamera.PiCamera() as camera:
-            camera.resolution = (640, 480)
-            camera.start_preview()
-            time.sleep(2)
-            start = time.time()
-            stream = io.BytesIO()
-            for foo in camera.capture_continuous(stream, 'jpeg'):
-                connection.write(struct.pack('<L', stream.tell()))
-                connection.flush()
-                stream.seek(0)
-                connection.write(stream.read())
-                if time.time() - start > 30:
-                    break
-                stream.seek(0)
-                stream.truncate()
+        time.sleep(2)
+        stream = io.BytesIO()
+        for foo in camera.capture_continuous(stream, 'jpeg'):
+            print "SARTTSDOI!!!!"
+            connection.write(struct.pack('<L', stream.tell()))
+            connection.flush()
+            stream.seek(0)
+            connection.write(stream.read())
+            break;
         connection.write(struct.pack('<L', 0))
     finally:
         sentence = sock.recv(4096)
