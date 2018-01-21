@@ -24,6 +24,7 @@ def find(sock, name):
 
 HOST = '192.168.50.64'
 PORT = 6666
+PORT2 = 3000
 #setup sockets
 serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -38,7 +39,6 @@ while True:
     name = ""
     size = 0
     if data:
-        print data
         if data.startswith("DEF"):
             tmp = txt.split()
             name = tmp[1]

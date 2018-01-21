@@ -2,42 +2,21 @@ import random
 import socket, select
 from time import gmtime, strftime
 from random import randint
+from recgnition import *
 
-image = "tux.png"
-
-HOST = '192.168.50.64'
-PORT = 6666
+HOST = '192.168.50.45'
+PORT = 3000
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = (HOST, PORT)
 sock.connect(server_address)
-
-try:
-
-    # open image
-    # send image size to server
-    sock.sendall("FIND wakaka")
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    answer = sock.recv(4096)
-    print 'answer = %s' % answer
-
-    answer = sock.recv(4096)
-
-    print 'answer = %s' % answer
-
-
-finally:
-    sock.close()
+path = "/Users/liukaige/Desktop/img.png"
+while True:
+    name = sock.recv(4096)
+    data = sock.recv(4096)
+    myfile = open(path, 'wb+')
+    myfile.write(data)
+    myfile.close()
+    print "haha"
+    result = recgnition(name,path)
+    sock.sendall(str(1))
