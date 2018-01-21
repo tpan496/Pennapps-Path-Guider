@@ -36,7 +36,7 @@ def get_rec_from_mac(theName):
         client_socket.close()
         print "OSIJDOFIJSDFOIJSDFOISJDFOSIDJ"
         print sentence
-        return (float(tmp[0]),float(tmp[1]),float(tmp[2]),float(tmp[3]),float(tmp[4]),float(tmp[5]))
+        return (int(tmp[0]),int(tmp[1]),int(tmp[2]),int(tmp[3]),int(tmp[4]),int(tmp[5]))
 
 def find(sock, name):
     time = 0
