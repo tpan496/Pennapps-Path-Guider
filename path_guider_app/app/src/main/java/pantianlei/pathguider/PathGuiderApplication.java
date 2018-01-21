@@ -1,10 +1,8 @@
 package pantianlei.pathguider;
 
 import android.app.Application;
-import android.util.Log;
 
 import java.net.URISyntaxException;
-import java.util.logging.Handler;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;

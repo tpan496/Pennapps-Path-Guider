@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import android.view.View;
 import android.widget.Button;
@@ -121,6 +120,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
+        String ip = IPText.getText().toString();
+        int port = Integer.parseInt(portText.getText().toString());
+        client = new Client(ip, port, activity);
+        */
+
         sendDEFButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
                 client.sendFIND(FINDText.getText().toString());
             }
         });
+
+        connectButton.setVisibility(View.INVISIBLE);
+        findViewById(R.id.server).setVisibility(View.INVISIBLE);
+        findViewById(R.id.defs).setVisibility(View.INVISIBLE);
+        findViewById(R.id.find).setVisibility(View.INVISIBLE);
     }
 
     private void parse(String textt) {
