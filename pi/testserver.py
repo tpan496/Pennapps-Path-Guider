@@ -10,7 +10,8 @@ server_socket.bind(('192.168.50.45', 3333))
 server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it
-connection = server_socket.accept()[0].makefile('rb')
+conn = server_socket.accept()[0]
+connection = conn.makefile('rb')
 try:
     while True:
         # Read the length of the image as a 32-bit unsigned int. If the
@@ -28,7 +29,8 @@ try:
         image = Image.open(image_stream)
         print('Image is %dx%d' % image.size)
         image.save('/Users/liukaige/Desktop/img.png')
-        server_socket.sendall("10 10 10 10 10 10")
+        print "SNET!!!!!1"
+        conn.sendall("10 10 10 10 10 10")
 
 finally:
     connection.close()
