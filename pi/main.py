@@ -14,7 +14,7 @@ curImageLoc = '/home/pi/Desktop/image.png'
 
 def get_rec_from_mac(theName):
     client_socket = socket.socket()
-    client_socket.connect(('192.168.50.45', 3333))
+    client_socket.connect(('192.168.50.45', 6666))
 
     # Make a file-like object out of the connection
     connection = client_socket.makefile('wb')
@@ -39,7 +39,7 @@ def get_rec_from_mac(theName):
         client_socket.close()
         print "OSIJDOFIJSDFOIJSDFOISJDFOSIDJ"
         print sentence
-        return (int(tmp[0]),int(tmp[1]),int(tmp[2]),int(tmp[3]),int(tmp[4]),int(tmp[5]))
+        return (float(tmp[0]),float(tmp[1]),float(tmp[2]),float(tmp[3]),float(tmp[4]),float(tmp[5]))
 
 def find(sock, name):
     time = 0
