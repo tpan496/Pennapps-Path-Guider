@@ -100,7 +100,7 @@ while True:
 
     # open image
     myfile = open(image, 'rb')
-    bytes = myfile.read()
+    bytes = "huhuuhu"
     name = "aa"
 
     # send image name to server
