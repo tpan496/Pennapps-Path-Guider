@@ -43,6 +43,7 @@ def find(sock, name):
     reportInterval = 5
     hoDegreeRange = 75
     while True:
+        print "ITERATION"
         if (time % reportInterval == 0):
             (x0, y0, x1, y1, w, h) = get_rec_from_mac(name)
             sleep(0.1)
@@ -55,7 +56,7 @@ def find(sock, name):
                 elif relativePos < 0:
                     sock.sendall(str(-relativePos) + "degrees to the left\n")
                 else:
-                    sock.sendall("right at your front\n")
+                    sock.sendall("right in front of you\n")
                 sock.sendall("starting ranging\n")
         time += 1
 
