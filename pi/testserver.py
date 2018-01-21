@@ -1,68 +1,35 @@
-#!/usr/bin/env python
+import io
+import socket
+import struct
+from PIL import Image
 
-import random
-import socket, select
-from time import gmtime, strftime
-from random import randint
+# Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
+# all interfaces)
+server_socket = socket.socket()
+server_socket.bind(('192.168.50.45', 6666))
+server_socket.listen(0)
 
-import os
+# Accept a single connection and make a file-like object out of it
+connection = server_socket.accept()[0].makefile('rb')
+try:
+    while True:
+        # Read the length of the image as a 32-bit unsigned int. If the
+        # length is zero, quit the loop
+        image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
+        if not image_len:
+            break
+        # Construct a stream to hold the image data and read the image
+        # data from the connection
+        image_stream = io.BytesIO()
+        image_stream.write(connection.read(image_len))
+        # Rewind the stream, open it as an image with PIL and do some
+        # processing on it
+        image_stream.seek(0)
+        image = Image.open(image_stream)
+        print('Image is %dx%d' % image.size)
+        image.save('/Users/liukaige/Desktop/img.png')
+        socket.sendall("10 10 10 10 10 10")
 
-from recognition import *
-
-imgcounter = 1
-basename = "image%s.png"
-
-HOST = '192.168.50.45'
-PORT = 6666
-
-connected_clients_sockets = []
-
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.bind((HOST, PORT))
-server_socket.listen(10)
-
-connected_clients_sockets.append(server_socket)
-name = ""
-size = 0
-while True:
-
-    read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-    for sock in read_sockets:
-
-        if sock == server_socket:
-            print "lolo"
-            sockfd, client_address = server_socket.accept()
-            connected_clients_sockets.append(sockfd)
-
-        else:
-            data = sock.recv(4096)
-            txt = str(data)
-            if data:
-                if data.startswith('NAME'):
-                    print data
-                    print "case 1"
-                    tmp = txt.split()
-                    name = tmp[1]
-                    size = int(tmp[2])
-                    sock.sendall("GOT NAME")
-                else :
-                    print "case 2"
-                    myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
-                    myfile.write(data)
-                    presize = len(data)
-                    print "size:", size
-                    size -= 4096
-                    while size > 0:
-                        data = sock.recv(size)
-                        print "data len:", len(data), "size", size
-                        myfile.write(data)
-                        size -= len(data)
-                    myfile.close()
-
-                    #(x0,y0,x1,y1,w,h) = recognition("/Users/liukaige/Desktop/img.png",name)
-                    sock.sendall("100 100 100 100 100 100")
-
-        imgcounter += 1
-#server_socket.close()
+finally:
+    connection.close()
+    server_socket.close()

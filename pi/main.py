@@ -1,6 +1,8 @@
 import random
+import struct
+import io
 import socket, select
-from time import gmtime, strftime
+import time
 from random import randint
 from picamera import PiCamera
 from time import sleep
@@ -15,30 +17,35 @@ sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = (HOST2, PORT2)
 sock2.connect(server_address)
 
-def get_rec_from_mac(theName,image):
-    # open image
-    myfile = open(image, 'rb')
-    bytes = myfile.read()
+def get_rec_from_mac(theName):
+    client_socket = socket.socket()
+    client_socket.connect(('192.168.50.45', 6666))
 
-    # send image name to server
-    sock2.sendall("NAME " + theName + " " + str(len(bytes)) + "\n")
-    answer = sock2.recv(4096)
-    print "NAME " + theName + " " + str(len(bytes)) + "\n"
-    print 'answer = %s' % answer
-    # send image to server
-    sock2.sendall(bytes)
-    # check what server send
-    answer = sock2.recv(4096)
-    print 'answer = '+answer
-    words = answer.split()
-    x0 = int(words[0])
-    y0 = int(words[1])
-    x1 = int(words[2])
-    y1 = int(words[3])
-    w = int(words[4])
-    h = int(words[5])
-    myfile.close()
-    return (x0,y0,x1,y1,w,h)
+    # Make a file-like object out of the connection
+    connection = client_socket.makefile('wb')
+    try:
+        with picamera.PiCamera() as camera:
+            camera.resolution = (640, 480)
+            camera.start_preview()
+            time.sleep(2)
+            start = time.time()
+            stream = io.BytesIO()
+            for foo in camera.capture_continuous(stream, 'jpeg'):
+                connection.write(struct.pack('<L', stream.tell()))
+                connection.flush()
+                stream.seek(0)
+                connection.write(stream.read())
+                if time.time() - start > 30:
+                    break
+                stream.seek(0)
+                stream.truncate()
+        connection.write(struct.pack('<L', 0))
+    finally:
+        sentence = sock.recv(4096)
+        tmp = sentence.split()
+        connection.close()
+        client_socket.close()
+        return (tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],tmp[5])
 
 def find(sock, name):
     time = 0
@@ -46,9 +53,8 @@ def find(sock, name):
     hoDegreeRange = 75
     while True:
         if (time % reportInterval == 0):
-            camera.capture(curImageLoc)
+            (x0, y0, x1, y1, w, h) = get_rec_from_mac(name)
             sleep(0.1)
-            (x0, y0, x1, y1, w, h) = get_rec_from_mac(name, curImageLoc)
             if x0 != 0 or y0 != 0 or w != 0 or h != 0:
                 sock.sendall("Found" + "\n")
                 hoCenter = (x0+x1)/2
