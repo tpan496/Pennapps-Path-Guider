@@ -55,7 +55,7 @@ def find(sock, name):
     while True:
         if (time % reportInterval == 0):
             camera.capture(curImageLoc)
-            (x0, y0, x1, y1, w, h) = get_rec_from_mac(imgPrefix + name, curImageLoc)
+            (x0, y0, x1, y1, w, h) = get_rec_from_mac(name, curImageLoc)
             if x0 != 0 or y0 != 0 or w != 0 or h != 0:
                 sock.sendall("Found" + "\n")
                 hoCenter = (x0+x1)/2
