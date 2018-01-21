@@ -28,7 +28,7 @@ try:
         image = Image.open(image_stream)
         print('Image is %dx%d' % image.size)
         image.save('/Users/liukaige/Desktop/img.png')
-        connection.sendall("10 10 10 10 10 10")
+        server_socket.sendall("10 10 10 10 10 10")
 
 finally:
     connection.close()
