@@ -47,16 +47,8 @@ while True:
                     sock.sendall("GOT NAME")
                 else :
                     print "case 2"
-                    myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
-                    while True:
-                        data = sock.recv(40960000)
-                        myfile.write(data)
-                        if not data:
-                            myfile.close()
-                            break;
-                    print "hoho"
-                    b = os.path.getsize("/Users/liukaige/Desktop/img.png")
-                    print "size:" + str(b)
+                    myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
+                    data = sock.recv(40960000)
                     myfile.write(data)
                     myfile.close()
 
