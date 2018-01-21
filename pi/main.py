@@ -88,6 +88,7 @@ while True:
             find(sock,name)
 
 '''
+image = curImageLoc
 
 HOST = '192.168.50.45'
 PORT = 6666
