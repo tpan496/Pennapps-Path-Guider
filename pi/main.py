@@ -34,6 +34,7 @@ def get_rec_from_mac(theName):
         tmp = sentence.split()
         connection.close()
         client_socket.close()
+        print "OSIJDOFIJSDFOIJSDFOISJDFOSIDJ"
         print sentence
         return (tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],tmp[5])
 
