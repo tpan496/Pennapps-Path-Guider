@@ -52,6 +52,7 @@ def find(sock, name):
             sleep(0.1)
             if x0 != 0 or y0 != 0 or w != 0 or h != 0:
                 sock.sendall("Found" + "\n")
+                sleep(1)
                 hoCenter = (x0+x1)/2
                 relativePos = ((hoCenter / w) - 0.5) * hoDegreeRange
                 if relativePos > 0:
@@ -60,6 +61,8 @@ def find(sock, name):
                     sock.sendall(str(-relativePos) + "degrees to the left\n")
                 else:
                     sock.sendall("right in front of you\n")
+                print relativePos
+                sleep(2)
                 sock.sendall("starting ranging\n")
         time += 1
 
