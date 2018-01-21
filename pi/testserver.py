@@ -24,12 +24,11 @@ server_socket.bind((HOST, PORT))
 server_socket.listen(10)
 
 connected_clients_sockets.append(server_socket)
-
+name = ""
+size = 0
 while True:
 
     read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-    name  = ""
-    size = 0
     for sock in read_sockets:
 
         if sock == server_socket:
@@ -53,11 +52,13 @@ while True:
                     myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
                     myfile.write(data)
                     presize = len(data)
-                    print "size:", len(data)
-                    if size > 4096:
-                        data = sock.recv(size - 4096)
-                        print "data len:", len(data)
+                    print "size:", size
+                    size -= 4096
+                    while size > 0:
+                        data = sock.recv(size)
+                        print "data len:", len(data), "size", size
                         myfile.write(data)
+                        size -= len(data)
                     myfile.close()
 
                     #(x0,y0,x1,y1,w,h) = recognition("/Users/liukaige/Desktop/img.png",name)
