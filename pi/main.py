@@ -2,7 +2,6 @@ import random
 import socket, select
 from time import gmtime, strftime
 from random import randint
-from recognition import *
 from picamera import PiCamera
 from time import sleep
 
@@ -31,7 +30,6 @@ def get_rec_from_mac(name,image):
         answer = sock.recv(4096)
 
         print 'answer = %s' % answer
-
         # send image to server
         sock.sendall(bytes)
         # check what server send
@@ -69,7 +67,6 @@ def find(sock, name):
                 else:
                     sock.sendall("right at your front")
                 sock.sendall("starting ranging")
-                ##开始bbb测距模式
                 break
         time += 1
 
