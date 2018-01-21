@@ -6,10 +6,7 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
-curImageLoc = '/home/pi/Desktop/image.png' \
-              '' \
-              ''
-
+curImageLoc = '/home/pi/Desktop/image.png'
 #Find the specified object on camera, and give visual feedback
 
 HOST2 = '192.168.50.45'
@@ -41,8 +38,8 @@ def get_rec_from_mac(theName,image):
     y1 = int(words[3])
     w = int(words[4])
     h = int(words[5])
-    return (x0,y0,x1,y1,w,h)
     myfile.close()
+    return (x0,y0,x1,y1,w,h)
 
 def find(sock, name):
     time = 0

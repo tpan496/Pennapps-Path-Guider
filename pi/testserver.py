@@ -37,7 +37,6 @@ while True:
             data = sock.recv(4096)
             txt = str(data)
             if data:
-                print data
                 if data.startswith('NAME'):
                     print "case 1"
                     tmp = txt.split()
