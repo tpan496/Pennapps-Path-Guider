@@ -3,16 +3,18 @@ import socket
 import struct
 from PIL import Image
 
-# Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
-# all interfaces)
-server_socket = socket.socket()
-server_socket.bind(('192.168.50.45', 3333))
-server_socket.listen(0)
+
 
 # Accept a single connection and make a file-like object out of it
-conn = server_socket.accept()[0]
 while True:
-    connection = server_socket.accept()[0].makefile('rb')
+    print "yolo"
+    # Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
+    # all interfaces)
+    server_socket = socket.socket()
+    server_socket.bind(('192.168.50.45', 6666))
+    server_socket.listen(0)
+    conn = server_socket.accept()[0]
+    connection = conn.makefile('rb')
     try:
         while True:
             print "wakaka"
