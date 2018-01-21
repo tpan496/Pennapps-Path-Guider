@@ -5,7 +5,7 @@ from PIL import Image
 from recognition import *
 # all interfaces)
 server_socket = socket.socket()
-server_socket.bind(('192.168.50.45', 6666))
+server_socket.bind(('10.251.65.92.', 6666))
 server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it

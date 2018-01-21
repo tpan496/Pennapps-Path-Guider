@@ -44,7 +44,7 @@ def get_rec_from_mac(theName):
 def find(sock, name):
     time = 0
     reportInterval = 5
-    hoDegreeRange = 75
+    hoDegreeRange = 30
     while True:
         print "ITERATION"
         if (time % reportInterval == 0):
@@ -68,7 +68,9 @@ def find(sock, name):
                 print relativePos
                 sleep(2)
                 sock.sendall("starting ranging\n")
+                sock.sendall("bee")
         time += 1
+
 
 
 HOST = '192.168.50.64'
