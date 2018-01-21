@@ -13,8 +13,7 @@ PORT = 6666
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = (HOST, PORT)
 sock.connect(server_address)
-
-try:
+while True:
 
     # open image
     myfile = open(image, 'rb')
@@ -34,6 +33,3 @@ try:
     print 'answer = %s' % answer
 
     #myfile.close()
-
-finally:
-    sock.close()

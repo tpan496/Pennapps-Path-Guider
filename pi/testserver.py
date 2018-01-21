@@ -39,10 +39,12 @@ while True:
             if data:
                 print data
                 if data.startswith('NAME'):
+                    print "case 1"
                     tmp = txt.split()
                     name = tmp[1]
                     sock.sendall("GOT NAME")
                 else :
+                    print "case 2"
                     myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
                     myfile.write(data)
                     data = sock.recv(40960000)
