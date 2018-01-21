@@ -10,7 +10,7 @@ curImageLoc = '/home/pi/Desktop/image.jpg'
 
 #Find the specified object on camera, and give visual feedback
 
-def get_rec_from_mac(name,image):
+def get_rec_from_mac(theName,image):
     HOST2 = '192.168.50.45'
     PORT2 = 6666
 
@@ -23,10 +23,10 @@ def get_rec_from_mac(name,image):
         # open image
         myfile = open(image, 'rb')
         bytes = myfile.read()
-        name = "aa"
+        theName = "aa"
 
         # send image name to server
-        sock.sendall("NAME %s" % name)
+        sock.sendall("NAME %s" % theName)
         answer = sock.recv(4096)
 
         print 'answer = %s' % answer
@@ -35,12 +35,12 @@ def get_rec_from_mac(name,image):
         # check what server send
         answer = sock.recv(4096)
         words = answer.split()
-        x0 = int(tmp[0])
-        y0 = int(tmp[1])
-        x1 = int(tmp[2])
-        y1 = int(tmp[3])
-        w = int(tmp[4])
-        h = int(tmp[5])
+        x0 = int(words[0])
+        y0 = int(words[1])
+        x1 = int(words[2])
+        y1 = int(words[3])
+        w = int(words[4])
+        h = int(words[5])
         return (x0,y0,x1,y1,w,h)
         myfile.close()
 
