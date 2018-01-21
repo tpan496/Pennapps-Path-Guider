@@ -30,6 +30,9 @@ def get_rec_from_mac(theName):
             break;
         connection.write(struct.pack('<L', 0))
     finally:
+        print "1"
+        client_socket.sendall(theName)
+        print "2"
         sentence = client_socket.recv(4096)
         tmp = sentence.split()
         connection.close()

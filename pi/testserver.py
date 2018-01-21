@@ -2,17 +2,16 @@ import io
 import socket
 import struct
 from PIL import Image
-
-
+from recognition import *
+# all interfaces)
+server_socket = socket.socket()
+server_socket.bind(('192.168.50.45', 6666))
+server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it
 while True:
     print "yolo"
     # Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
-    # all interfaces)
-    server_socket = socket.socket()
-    server_socket.bind(('192.168.50.45', 6666))
-    server_socket.listen(0)
     conn = server_socket.accept()[0]
     connection = conn.makefile('rb')
     try:
@@ -31,11 +30,11 @@ while True:
             # processing on it
             image_stream.seek(0)
             image = Image.open(image_stream)
-            print('Image is %dx%d' % image.size)
             image.save('/Users/liukaige/Desktop/img.png')
-            print "SNET!!!!!1"
-            conn.sendall("10 10 10 10 10 10")
-
+            print "3"
+            name = str(conn.recv(4096))
+            (a,b,c,d,e,f) = recognition('/Users/liukaige/Desktop/img.png',name)
+            print "4"
+            conn.sendall(str(a) + " " + str(b) + " " + str(c) + " " + str(d) + " " + str(e) + " " + str(f))
     finally:
         connection.close()
-        server_socket.close()

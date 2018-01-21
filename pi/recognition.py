@@ -72,7 +72,6 @@ def recog(image, defstring):
             return (startX, startY, endX, endY, h, w)
     return (0, 0, 0, 0, 0, 0)
 
-
 def recognition(recimg, defstring):
     image = cv2.imread(recimg)
     return recog(image, defstring)
