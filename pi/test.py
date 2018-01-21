@@ -1,22 +1,34 @@
-import boto3
+import io
+import socket
+import struct
+from PIL import Image
 
-BUCKET = "lolaguagua"
-KEY = "WechatIMG3.jpeg"
+# Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
+# all interfaces)
+server_socket = socket.socket()
+server_socket.bind(('0.0.0.0', 8000))
+server_socket.listen(0)
 
-def detect_labels(bucket, key, max_labels=10, min_confidence=90, region="us-east-2"):
-	rekognition = boto3.client("rekognition", region, aws_access_key_id="AKIAJ7NGTEGGVXO7V62A",aws_secret_access_key="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")
-	response = rekognition.detect_labels(
-		Image={
-			"S3Object": {
-				"Bucket": bucket,
-				"Name": key,
-			}
-		},
-		MaxLabels=max_labels,
-		MinConfidence=min_confidence,
-	)
-	return response['Labels']
-
-
-for label in detect_labels(BUCKET, KEY):
-	print("{Name} - {Confidence}%".format(**label))
+# Accept a single connection and make a file-like object out of it
+connection = server_socket.accept()[0].makefile('rb')
+try:
+    while True:
+        # Read the length of the image as a 32-bit unsigned int. If the
+        # length is zero, quit the loop
+        image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
+        if not image_len:
+            break
+        # Construct a stream to hold the image data and read the image
+        # data from the connection
+        image_stream = io.BytesIO()
+        image_stream.write(connection.read(image_len))
+        # Rewind the stream, open it as an image with PIL and do some
+        # processing on it
+        image_stream.seek(0)
+        image = Image.open(image_stream)
+        print('Image is %dx%d' % image.size)
+        image.verify()
+        print('Image is verified')
+finally:
+    connection.close()
+    server_socket.close()

@@ -21,8 +21,8 @@ while True:
     name = "aa"
 
     # send image name to server
-    sock.sendall("NAME %s" % name)
-    answer = sock.readline()
+    sock.sendall("NAME aa "+ str(len(bytes)))
+    answer = sock.recv(4096)
 
     print 'answer = %s' % answer
 
@@ -30,7 +30,7 @@ while True:
 
     sock.sendall(bytes)
     # check what server send
-    answer = sock.readline()
+    answer = sock.recv(4096)
     print 'answer = %s' % answer
 
     #myfile.close()

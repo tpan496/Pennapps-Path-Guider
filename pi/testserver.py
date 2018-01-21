@@ -49,7 +49,7 @@ while True:
                     sock.sendall("GOT NAME")
                 else :
                     print "case 2"
-                    myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
+                    myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
                     myfile.write(data)
                     presize = len(data)
                     print "size:", size
