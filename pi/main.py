@@ -13,14 +13,28 @@ curImageLoc = '/home/pi/Desktop/image.jpg'
 #Find the specified object on camera, and give visual feedback
 def find(sock, name):
     time = 0
-    interval = 0.1
     reportInterval = 5
+    hoDegreeRange = 75
     while True:
         camera.capture(curImageLoc)
-        (x,y,w,h) = recgnition(imgPrefix+name,curImageLoc)
+        (x0,y0,x1,y1,w,h) = recognition(imgPrefix+name,curImageLoc)
         time += 1
         if (time % reportInterval == 0):
-            sock.sendall("instr hahahahahaha" + "\n")
+            if x != 0 or y != 0 or w != 0 or h != 0:
+                sock.sendall("Found" + "\n")
+                hoCenter = (x0+x1)/2
+                relativePos = ((hoCenter / w) - 0.5) * hoDegreeRange
+                if relativePos > 0:
+                    sock.sendall(relativePos + "degrees to the right")
+                elif relativePos < 0:
+                    sock.sendall(-relativePos + "degrees to the left")
+                else:
+                    sock.sendall("right at your front")
+                sock.sendall("starting ranging")
+                ##开始bbb测距模式
+                break
+
+
 
 HOST = '192.168.50.64'
 PORT = 6666

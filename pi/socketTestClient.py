@@ -2,7 +2,7 @@ import random
 import socket, select
 from time import gmtime, strftime
 from random import randint
-from recgnition import *
+from recognition import *
 
 HOST = '192.168.50.45'
 PORT = 3000
