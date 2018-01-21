@@ -6,7 +6,7 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
-curImageLoc = '/home/pi/Desktop/image.jpg'
+curImageLoc = '/home/pi/Desktop/image.png'
 
 #Find the specified object on camera, and give visual feedback
 
@@ -17,36 +17,29 @@ def get_rec_from_mac(theName,image):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (HOST2, PORT2)
     sock.connect(server_address)
+    # open image
+    myfile = open(image, 'rb')
 
-    try:
+    bytes = myfile.read()
 
-        # open image
-        myfile = open(image, 'rb')
-        bytes = myfile.read()
-        theName = "aa"
+    # send image name to server
+    sock.sendall("NAME %s" % theName)
+    answer = sock.recv(4096)
 
-        # send image name to server
-        sock.sendall("NAME %s" % theName)
-        answer = sock.recv(4096)
-
-        print 'answer = %s' % answer
-        # send image to server
-        sock.sendall(bytes)
-        # check what server send
-        answer = sock.recv(4096)
-        words = answer.split()
-        x0 = int(words[0])
-        y0 = int(words[1])
-        x1 = int(words[2])
-        y1 = int(words[3])
-        w = int(words[4])
-        h = int(words[5])
-        return (x0,y0,x1,y1,w,h)
-        myfile.close()
-
-
-    finally:
-        sock.close()
+    print 'answer = %s' % answer
+    # send image to server
+    sock.sendall(bytes)
+    # check what server send
+    answer = sock.recv(4096)
+    words = answer.split()
+    x0 = int(words[0])
+    y0 = int(words[1])
+    x1 = int(words[2])
+    y1 = int(words[3])
+    w = int(words[4])
+    h = int(words[5])
+    return (x0,y0,x1,y1,w,h)
+    myfile.close()
 
 def find(sock, name):
     time = 0
@@ -55,6 +48,7 @@ def find(sock, name):
     while True:
         if (time % reportInterval == 0):
             camera.capture(curImageLoc)
+            sleep(0.1)
             (x0, y0, x1, y1, w, h) = get_rec_from_mac(name, curImageLoc)
             if x0 != 0 or y0 != 0 or w != 0 or h != 0:
                 sock.sendall("Found" + "\n")
@@ -81,7 +75,7 @@ serversock.listen(10)
 
 while True:
     sock, client_address = serversock.accept()
-    data = sock.recv(4096).decode('UTF-8')
+    data = sock.recv(4096)
     txt = str(data)
 
     name = ""
