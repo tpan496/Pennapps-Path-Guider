@@ -42,6 +42,7 @@ while True:
             txt = str(data)
             if data:
                 if data.startswith('NAME'):
+                    print data
                     print "case 1"
                     tmp = txt.split()
                     name = tmp[1]
@@ -49,12 +50,13 @@ while True:
                     sock.sendall("GOT NAME")
                 else :
                     print "case 2"
-                    print len(data)
                     myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
                     myfile.write(data)
                     presize = len(data)
+                    print "size:", len(data)
                     if size > 4096:
                         data = sock.recv(size - 4096)
+                        print "data len:", len(data)
                         myfile.write(data)
                     myfile.close()
 

@@ -23,14 +23,12 @@ def get_rec_from_mac(theName,image):
     # send image name to server
     sock2.sendall("NAME " + theName + " " + str(len(bytes)) + "\n")
     answer = sock2.recv(4096)
-
+    print "NAME " + theName + " " + str(len(bytes)) + "\n"
     print 'answer = %s' % answer
-
     # send image to server
     sock2.sendall(bytes)
     # check what server send
     answer = sock2.recv(4096)
-    print 'answer = %s' % answer
     words = answer.split()
     x0 = int(words[0])
     y0 = int(words[1])
