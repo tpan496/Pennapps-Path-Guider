@@ -45,7 +45,7 @@ while True:
                 else :
                     print "case 2"
                     myfile = open('/Users/liukaige/Desktop/img.png', 'wb')
-                    while true:
+                    while True:
                         data = sock.recv(40960000)
                         if not data:
                             myfile.close()
