@@ -21,7 +21,7 @@ def get_rec_from_mac(theName,image):
     bytes = myfile.read()
 
     # send image name to server
-    sock2.sendall("NAME %s" % theName)
+    sock2.sendall("NAME %s\n" % theName)
     answer = sock2.recv(4096)
 
     print 'answer = %s' % answer

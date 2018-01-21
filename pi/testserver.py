@@ -28,7 +28,8 @@ connected_clients_sockets.append(server_socket)
 while True:
 
     read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-
+    name  = ""
+    size = 0
     for sock in read_sockets:
 
         if sock == server_socket:
@@ -44,11 +45,12 @@ while True:
                     print "case 1"
                     tmp = txt.split()
                     name = tmp[1]
+                    size = int(tmp[2])
                     sock.sendall("GOT NAME")
                 else :
                     print "case 2"
                     myfile = open('/Users/liukaige/Desktop/WechatIMG3.png', 'wb')
-                    data = sock.recv(40960000)
+                    data = sock.recv(size)
                     myfile.write(data)
                     myfile.close()
 

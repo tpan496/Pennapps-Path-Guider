@@ -5,7 +5,7 @@ import socket, select
 from time import gmtime, strftime
 from random import randint
 
-image = '/home/pi/Desktop/image.png'
+image = "/Users/liukaige/Desktop/test.png"
 
 HOST = '192.168.50.45'
 PORT = 6666
@@ -27,6 +27,7 @@ while True:
     print 'answer = %s' % answer
 
     # send image to server
+
     sock.sendall(bytes)
     # check what server send
     answer = sock.recv(4096)
