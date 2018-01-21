@@ -19,11 +19,14 @@
 
     <ImageButton
         android:id="@+id/button"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_below="@+id/connectText"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="80dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:padding="50dp"
         android:background="@drawable/roundbutton"
         app:srcCompat="@drawable/ic_keyboard_voice_white_24dp" />
     <LinearLayout
