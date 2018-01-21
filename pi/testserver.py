@@ -4,6 +4,7 @@ import random
 import socket, select
 from time import gmtime, strftime
 from random import randint
+from recognition import *
 
 imgcounter = 1
 basename = "image%s.png"
@@ -56,8 +57,8 @@ while True:
                             break
                         myfile.write(data)
                         myfile.close()
-
-                        sock.sendall("0 0 0 0 0 0")
+                        (x0,y0,x1,y1,w,h) = recognition("/Users/liukaige/Desktop/img.png",name)
+                        sock.sendall("100 100 100 100 100 100")
             except:
                 sock.close()
                 connected_clients_sockets.remove(sock)

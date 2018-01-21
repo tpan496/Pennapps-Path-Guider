@@ -73,13 +73,7 @@ def recog(image, defstring):
     return (0, 0, 0, 0, 0, 0)
 
 
-def recognition(defstring, recimg):
+def recognition(recimg, defstring):
     image = cv2.imread(recimg)
     return recog(image, defstring)
 
-
-imagedir = sys.argv[1]
-target = sys.argv[2]
-print(recognition(target, imagedir))
-
-# recognition()
